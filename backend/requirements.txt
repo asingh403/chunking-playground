@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+langchain
+langchain-text-splitters
+langgraph
+sentence-transformers
+pypdf
+python-docx
+tiktoken
+numpy
+scikit-learn
+python-multipart
+reportlab
+pymongo>=4.6.0
+python-dotenv>=1.0.0

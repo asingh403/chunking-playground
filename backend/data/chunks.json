@@ -1,0 +1,569 @@
+{
+    "strategy": "llm",
+    "params": {
+        "model": "openai/gpt-oss-120b",
+        "simulated": true
+    },
+    "result": {
+        "chunks": [
+            {
+                "index": 1,
+                "title": "Logical Section: Learn Java",
+                "topic": "Document / Java / Learn",
+                "text": "Learn Java",
+                "length": 10,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #1."
+            },
+            {
+                "index": 2,
+                "title": "Logical Section: - ",
+                "topic": "Document / Search / Previous",
+                "text": "- \n keyboard_arrow_left\n Previous \n Next\n keyboard_arrow_right \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n search",
+                "length": 105,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #2."
+            },
+            {
+                "index": 3,
+                "title": "Logical Section: Table of Contents",
+                "topic": "Document / Contents / Table",
+                "text": "Table of Contents",
+                "length": 17,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #3."
+            },
+            {
+                "index": 4,
+                "title": "Logical Section: - 1. Create a simple java maven project.",
+                "topic": "Document / Create / Java",
+                "text": "- 1. Create a simple java maven project.\n- 2. Maven dependency\n- 3. Create Bean class\n- 4. ApplicationContext.xml\n- 5. Create SpringXMLConfigurationMain.java\n- 6. Run it",
+                "length": 169,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #4."
+            },
+            {
+                "index": 5,
+                "title": "Logical Section: In this post, we will see how to create ...",
+                "topic": "Document / Configuration / Example",
+                "text": "In this post, we will see how to create Spring hello world XML based configuration example.",
+                "length": 91,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #5."
+            },
+            {
+                "index": 6,
+                "title": "Logical Section: Here are simple steps to create Spring X...",
+                "topic": "Document / Configuration / Example",
+                "text": "Here are simple steps to create Spring XML configuration example.",
+                "length": 65,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #6."
+            },
+            {
+                "index": 7,
+                "title": "Logical Section: ## 1. Create asimple java maven project.",
+                "topic": "Document / Java / Project",
+                "text": "## 1. Create asimple java maven project.",
+                "length": 40,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #7."
+            },
+            {
+                "index": 8,
+                "title": "Logical Section: ## 2. Maven dependency",
+                "topic": "Document / Dependency / Maven",
+                "text": "## 2. Maven dependency",
+                "length": 22,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #8."
+            },
+            {
+                "index": 9,
+                "title": "Logical Section: put spring and cglib maven dependency in...",
+                "topic": "Document / Dependency / Maven",
+                "text": "put spring and cglib maven dependency in pom.xml.",
+                "length": 49,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #9."
+            },
+            {
+                "index": 10,
+                "title": "Logical Section: <dependencies>",
+                "topic": "Document / Version / Groupid",
+                "text": "<dependencies>\n <dependency>\n <groupId>org.springframework</groupId>\n <artifactId>spring-core</artifactId>\n <version>${spring.version}</version>\n </dependency>\n <dependency>\n <groupId>org.springframework</groupId>\n <artifactId>spring-webmvc</artifactId>\n <version>${spring.version}</version>\n </dependency>\n<!-- cglib required for @configuration annotation -->\n <dependency>\n <groupId>cglib</groupId>\n <artifactId>cglib</artifactId>\n <version>3.0</version>\n </dependency>\n </dependencies>\n <properties>\n <spring.version>4.2.1.RELEASE</spring.version>\n </properties>",
+                "length": 565,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #10."
+            },
+            {
+                "index": 11,
+                "title": "Logical Section: | ",
+                "topic": "Document / Version / Groupid",
+                "text": "| \n \n 1234567891011121314151617181920212223\n | \n     <dependencies>  <dependency>   <groupId>org.springframework</groupId>   <artifactId>spring-core</artifactId>   <version>${spring.version}</version>  </dependency>  <dependency>   <groupId>org.springframework</groupId>   <artifactId>spring-webmvc</artifactId>   <version>${spring.version}</version>  </dependency><!-- cglib required for @configuration annotation -->   <dependency>            <groupId>cglib</groupId>            <artifactId>cglib</artifactId>            <version>3.0</version>        </dependency> </dependencies> <properties>  <spring.version>4.2.1.RELEASE</spring.version> </properties>  |",
+                "length": 660,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #11."
+            },
+            {
+                "index": 12,
+                "title": "Logical Section: So your pom.xml will look like:",
+                "topic": "Document / Look / Will",
+                "text": "So your pom.xml will look like:",
+                "length": 31,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #12."
+            },
+            {
+                "index": 13,
+                "title": "Logical Section: <project xmlns=\"http://maven.apache.org/...",
+                "topic": "Document / Maven / Http",
+                "text": "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"<\n <modelVersion<4.0.0</modelVersion>\n <groupId>org.arpit.java2blog</groupId>\n <artifactId>SpringHelloWorldJavaBasedConfiguration</artifactId>\n <version>0.0.1-SNAPSHOT</version>\n <name>SpringHelloWorldJavaBasedConfiguration</name>\n <description>It provides hello world program for java based config\n</description>",
+                "length": 516,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #13."
+            },
+            {
+                "index": 14,
+                "title": "Logical Section: <dependencies>",
+                "topic": "Document / Version / Groupid",
+                "text": "<dependencies>\n <dependency>\n <groupId>org.springframework</groupId>\n <artifactId>spring-core</artifactId>\n <version>${spring.version}</version>\n </dependency>\n <dependency>\n <groupId>org.springframework</groupId>\n <artifactId>spring-webmvc</artifactId>\n <version>${spring.version}</version>\n </dependency>\n<!-- cglib required for @configuration annotation -->\n <dependency>\n <groupId>cglib</groupId>\n <artifactId>cglib</artifactId>\n <version>3.0</version>\n </dependency>\n </dependencies>\n <properties>\n <spring.version>4.2.1.RELEASE</spring.version>\n </properties>\n</project>",
+                "length": 576,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #14."
+            },
+            {
+                "index": 15,
+                "title": "Logical Section: | ",
+                "topic": "Document / Version / Artifactid",
+                "text": "| \n \n 123456789101112131415161718192021222324252627282930313233\n | \n  <project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"<  <modelVersion<4.0.0</modelVersion>  <groupId>org.arpit.java2blog</groupId>  <artifactId>SpringHelloWorldJavaBasedConfiguration</artifactId>  <version>0.0.1-SNAPSHOT</version>  <name>SpringHelloWorldJavaBasedConfiguration</name>  <description>It provides hello world program for java based config</description>  <dependencies>  <dependency>   <groupId>org.springframework</groupId>   <artifactId>spring-core</artifactId>   <version>${spring.version}</version>  </dependency>  <dependency>   <groupId>org.springframework</groupId>   <artifactId>spring-webmvc</artifactId>   <version>${spring.version}</version>  </dependency><!-- cglib required for @configuration annotation -->   <dependency>            <groupId>cglib</groupId>            <artifactId>cglib</artifactId>            <version>3.0</version>    </dependency> </dependencies> <properties>  <spring.version>4.2.1.RELEASE</spring.version> </properties></project>  |",
+                "length": 1200,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #15."
+            },
+            {
+                "index": 16,
+                "title": "Logical Section: ## 3. Create Bean class",
+                "topic": "Document / Class / Create",
+                "text": "## 3. Create Bean class",
+                "length": 23,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #16."
+            },
+            {
+                "index": 17,
+                "title": "Logical Section: Create a bean class called Country.java ...",
+                "topic": "Document / Model / Class",
+                "text": "Create a bean class called Country.java in package org.arpit.java2blog.model .",
+                "length": 78,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #17."
+            },
+            {
+                "index": 18,
+                "title": "Logical Section: package org.arpit.java2blog.model;",
+                "topic": "Document / Java2Blog / Package",
+                "text": "package org.arpit.java2blog.model;",
+                "length": 34,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #18."
+            },
+            {
+                "index": 19,
+                "title": "Logical Section: public class Country {",
+                "topic": "Document / Private / Population",
+                "text": "public class Country {\n private String name;\n private long population;",
+                "length": 70,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #19."
+            },
+            {
+                "index": 20,
+                "title": "Logical Section: public Country(String name, long populat...",
+                "topic": "Document / Population / Name",
+                "text": "public Country(String name, long population) {\n super();\n this.name = name;\n this.population = population;\n }\n public String getName() {\n return name;\n }\n public void setName(String name) {\n this.name = name;\n }\n public long getPopulation() {\n return population;\n }\n public void setPopulation(long population) {\n this.population = population;\n }",
+                "length": 345,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #20."
+            },
+            {
+                "index": 21,
+                "title": "Logical Section: }",
+                "topic": "Document / General Context",
+                "text": "}",
+                "length": 1,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #21."
+            },
+            {
+                "index": 22,
+                "title": "Logical Section: | ",
+                "topic": "Document / Population / Name",
+                "text": "| \n \n 123456789101112131415161718192021222324252627\n | \n  package org.arpit.java2blog.model; public class Country {    private String name;    private long population;     public Country(String name, long population) {        super();        this.name = name;        this.population = population;    }    public String getName() {        return name;    }    public void setName(String name) {        this.name = name;    }    public long getPopulation() {        return population;    }    public void setPopulation(long population) {        this.population = population;    } }  |",
+                "length": 582,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #22."
+            },
+            {
+                "index": 23,
+                "title": "Logical Section: ## 4. ApplicationContext.xml",
+                "topic": "Document / General Context",
+                "text": "## 4. ApplicationContext.xml",
+                "length": 28,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #23."
+            },
+            {
+                "index": 24,
+                "title": "Logical Section: Create ApplicationContext.xml in src/mai...",
+                "topic": "Document / Below / Create",
+                "text": "Create ApplicationContext.xml in src/main/resources as below.",
+                "length": 61,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #24."
+            },
+            {
+                "index": 25,
+                "title": "Logical Section: <?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                "topic": "Document / Http / Schema",
+                "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<beans xmlns=\"http://www.springframework.org/schema/beans\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:context=\"http://www.springframework.org/schema/context\"\n xmlns:aop=\"http://www.springframework.org/schema/aop\"\n xsi:schemaLocation=\"http://www.springframework.org/schema/beans\n http://www.springframework.org/schema/beans/spring-beans-3.0.xsd\n http://www.springframework.org/schema/context\n http://www.springframework.org/schema/context/spring-context-3.0.xsd\n http://www.springframework.org/schema/aop \n http://www.springframework.org/schema/aop/spring-aop-3.0.xsd\n \">",
+                "length": 666,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #25."
+            },
+            {
+                "index": 26,
+                "title": "Logical Section: <bean id=\"country\" class=\"org.arpit.java...",
+                "topic": "Document / Constructor / Bean",
+                "text": "<bean id=\"country\" class=\"org.arpit.java2blog.model.Country\">\n <constructor-arg index=\"0\" value=\"India\"></constructor-arg>\n <constructor-arg index=\"1\" value=\"20000\"></constructor-arg>\n </bean>\n <context:annotation-config />\n</beans>",
+                "length": 232,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #26."
+            },
+            {
+                "index": 27,
+                "title": "Logical Section: | ",
+                "topic": "Document / Http / Springframework",
+                "text": "| \n \n 123456789101112131415161718192021\n | \n  <?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml version=\"1.0\" encoding=\"UTF-8\"?><beans xmlns=\"http://www.springframework.org/schema/beans\"    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:context=\"http://www.springframework.org/schema/context\"    xmlns:aop=\"http://www.springframework.org/schema/aop\"    xsi:schemaLocation=\"http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-3.0.xsd    http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd    \">     <bean id=\"country\" class=\"org.arpit.java2blog.model.Country\">        <constructor-arg index=\"0\" value=\"India\"></constructor-arg>        <constructor-arg index=\"1\" value=\"20000\"></constructor-arg>    </bean>    <context:annotation-config /></beans>  |",
+                "length": 983,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #27."
+            },
+            {
+                "index": 28,
+                "title": "Logical Section: Please note that we are using Constructo...",
+                "topic": "Document / Injection / Note",
+                "text": "Please note that we are using Constructor injection to inject dependencies here.",
+                "length": 80,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #28."
+            },
+            {
+                "index": 29,
+                "title": "Logical Section: ## 5. Create SpringXMLConfigurationMain....",
+                "topic": "Document / Java / Create",
+                "text": "## 5. Create SpringXMLConfigurationMain.java",
+                "length": 44,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #29."
+            },
+            {
+                "index": 30,
+                "title": "Logical Section: Create a class named \"SpringXMLConfigura...",
+                "topic": "Document / Class / Java",
+                "text": "Create a class named \"SpringXMLConfigurationMain.java\" in org.arpit.java2blog package.",
+                "length": 86,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #30."
+            },
+            {
+                "index": 31,
+                "title": "Logical Section: package org.arpit.java2blog;",
+                "topic": "Document / Java2Blog / Package",
+                "text": "package org.arpit.java2blog;",
+                "length": 28,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #31."
+            },
+            {
+                "index": 32,
+                "title": "Logical Section: import org.arpit.java2blog.model.Country...",
+                "topic": "Document / Import / Model",
+                "text": "import org.arpit.java2blog.model.Country;\nimport org.springframework.context.support.ClassPathXmlApplicationContext;",
+                "length": 116,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #32."
+            },
+            {
+                "index": 33,
+                "title": "Logical Section: /**",
+                "topic": "Document / Country / Population",
+                "text": "/**\n * Spring XML based configuration example\n *\n */\npublic class SpringXMLConfigurationMain \n{\n public static void main( String[] args )\n {\n ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(\"ApplicationContext.xml\");\n Country countryBean = (Country) ac.getBean(\"country\");\n String name = countryBean.getName();\n System.out.println(\"Country name: \"+name);\n long population = countryBean.getPopulation();\n System.out.println(\"Country population: \"+population);\n ac.close(); \n }\n}",
+                "length": 500,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #33."
+            },
+            {
+                "index": 34,
+                "title": "Logical Section: | ",
+                "topic": "Document / Country / Population",
+                "text": "| \n \n 123456789101112131415161718192021222324\n | \n  package org.arpit.java2blog; import org.arpit.java2blog.model.Country;import org.springframework.context.support.ClassPathXmlApplicationContext; /** * Spring XML based configuration example * */public class SpringXMLConfigurationMain {    public static void main( String[] args )    {        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(\"ApplicationContext.xml\");        Country countryBean = (Country) ac.getBean(\"country\");        String name = countryBean.getName();        System.out.println(\"Country name: \"+name);        long population = countryBean.getPopulation();        System.out.println(\"Country population: \"+population);        ac.close();     }}  |",
+                "length": 742,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #34."
+            },
+            {
+                "index": 35,
+                "title": "Logical Section: ## 6. Run it",
+                "topic": "Document / General Context",
+                "text": "## 6. Run it",
+                "length": 12,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #35."
+            },
+            {
+                "index": 36,
+                "title": "Logical Section: When you run above program, you will get...",
+                "topic": "Document / When / Below",
+                "text": "When you run above program, you will get below output.",
+                "length": 54,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #36."
+            },
+            {
+                "index": 37,
+                "title": "Logical Section: Jun 15, 2018 11:21:58 AM Jun 15, 2018 9:...",
+                "topic": "Document / 2018 / Context",
+                "text": "Jun 15, 2018 11:21:58 AM Jun 15, 2018 9:04:19 PM org.springframework.context.support.ClassPathXmlApplicationContext prepareRefresh\nINFO: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@210366b4: startup date [Fri Jun 15 21:04:19 IST 2018]; root of context hierarchy\nJun 15, 2018 9:04:20 PM org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions\nINFO: Loading XML bean definitions from class path resource [ApplicationContext.xml]",
+                "length": 486,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #37."
+            },
+            {
+                "index": 38,
+                "title": "Logical Section: Country name: India",
+                "topic": "Document / Country / Population",
+                "text": "Country name: India\nCountry population: 20000",
+                "length": 45,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #38."
+            },
+            {
+                "index": 39,
+                "title": "Logical Section: Jun 15, 2018 9:04:20 PM org.springframew...",
+                "topic": "Document / Context / 2018",
+                "text": "Jun 15, 2018 9:04:20 PM org.springframework.context.support.ClassPathXmlApplicationContext doClose\nINFO: Closing org.springframework.context.support.ClassPathXmlApplicationContext@210366b4: startup date [Fri Jun 15 21:04:19 IST 2018]; root of context hierarchy",
+                "length": 260,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #39."
+            },
+            {
+                "index": 40,
+                "title": "Logical Section: That’s all about Spring XML configuratio...",
+                "topic": "Document / Configuration / Spring",
+                "text": "That’s all about Spring XML configuration.",
+                "length": 42,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #40."
+            },
+            {
+                "index": 41,
+                "title": "Logical Section: ### Was this post helpful?",
+                "topic": "Document / Helpful / Post",
+                "text": "### Was this post helpful?",
+                "length": 26,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #41."
+            },
+            {
+                "index": 42,
+                "title": "Logical Section: Let us know if this post was helpful. Fe...",
+                "topic": "Document / Helpful / Feedbacks",
+                "text": "Let us know if this post was helpful. Feedbacks are monitored on daily basis. Please do provide feedback as that\\'s the only way to improve.",
+                "length": 140,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #42."
+            },
+            {
+                "index": 43,
+                "title": "Logical Section: Yes ",
+                "topic": "Document / General Context",
+                "text": "Yes \n \n \n \n \n No",
+                "length": 16,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #43."
+            },
+            {
+                "index": 44,
+                "title": "Logical Section: ### Related posts:",
+                "topic": "Document / Posts / Related",
+                "text": "### Related posts:",
+                "length": 18,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #44."
+            },
+            {
+                "index": 45,
+                "title": "Logical Section: - Spring init-method and destroy-method ...",
+                "topic": "Document / Method / Init",
+                "text": "- Spring init-method and destroy-method example",
+                "length": 47,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #45."
+            },
+            {
+                "index": 46,
+                "title": "Logical Section: - Prefix “context” for element “context:...",
+                "topic": "Document / Context / Bound",
+                "text": "- Prefix “context” for element “context:component-scan” or “context:annotation-config” is not bound : Spring error",
+                "length": 114,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #46."
+            },
+            {
+                "index": 47,
+                "title": "Logical Section: - How to load multiple Spring configurat...",
+                "topic": "Document / Files / Configuration",
+                "text": "- How to load multiple Spring configuration files",
+                "length": 49,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #47."
+            },
+            {
+                "index": 48,
+                "title": "Logical Section: - Spring Autowiring byName",
+                "topic": "Document / Byname / Autowiring",
+                "text": "- Spring Autowiring byName",
+                "length": 26,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #48."
+            },
+            {
+                "index": 49,
+                "title": "Logical Section: - @Autowired Annotation in spring",
+                "topic": "Document / Annotation / Spring",
+                "text": "- @Autowired Annotation in spring",
+                "length": 33,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #49."
+            },
+            {
+                "index": 50,
+                "title": "Logical Section: - Spring JSR 250 Annotations",
+                "topic": "Document / Annotations / Spring",
+                "text": "- Spring JSR 250 Annotations",
+                "length": 28,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #50."
+            },
+            {
+                "index": 51,
+                "title": "Logical Section: - @Qualifier Annotation in spring",
+                "topic": "Document / Annotation / Spring",
+                "text": "- @Qualifier Annotation in spring",
+                "length": 33,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #51."
+            },
+            {
+                "index": 52,
+                "title": "Logical Section: - @Required Annotation in spring",
+                "topic": "Document / Spring / Annotation",
+                "text": "- @Required Annotation in spring",
+                "length": 32,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #52."
+            },
+            {
+                "index": 53,
+                "title": "Logical Section: - Spring lifetime callbacks",
+                "topic": "Document / Lifetime / Spring",
+                "text": "- Spring lifetime callbacks",
+                "length": 27,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #53."
+            },
+            {
+                "index": 54,
+                "title": "Logical Section: - Spring ApplicationContext",
+                "topic": "Document / Spring",
+                "text": "- Spring ApplicationContext",
+                "length": 27,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #54."
+            },
+            {
+                "index": 55,
+                "title": "Logical Section: ## Share this",
+                "topic": "Document / Share",
+                "text": "## Share this",
+                "length": 13,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #55."
+            },
+            {
+                "index": 56,
+                "title": "Logical Section: - ",
+                "topic": "Document / General Context",
+                "text": "- \n- \n- \n-",
+                "length": 10,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #56."
+            },
+            {
+                "index": 57,
+                "title": "Logical Section: -",
+                "topic": "Document / General Context",
+                "text": "-",
+                "length": 1,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #57."
+            },
+            {
+                "index": 58,
+                "title": "Logical Section: Prev",
+                "topic": "Document / Prev",
+                "text": "Prev",
+                "length": 4,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #58."
+            },
+            {
+                "index": 59,
+                "title": "Logical Section: Injecting Prototype bean into a Singleto...",
+                "topic": "Document / Bean / Singleton",
+                "text": "Injecting Prototype bean into a Singleton bean in Spring",
+                "length": 56,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #59."
+            },
+            {
+                "index": 60,
+                "title": "Logical Section: -",
+                "topic": "Document / General Context",
+                "text": "-",
+                "length": 1,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #60."
+            },
+            {
+                "index": 61,
+                "title": "Logical Section: Next",
+                "topic": "Document / Next",
+                "text": "Next",
+                "length": 4,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #61."
+            },
+            {
+                "index": 62,
+                "title": "Logical Section: No qualifying bean of type in Spring or ...",
+                "topic": "Document / Spring / Type",
+                "text": "No qualifying bean of type in Spring or Spring Boot",
+                "length": 51,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #62."
+            },
+            {
+                "index": 63,
+                "title": "Logical Section: ## Author",
+                "topic": "Document / Author",
+                "text": "## Author",
+                "length": 9,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #63."
+            },
+            {
+                "index": 64,
+                "title": "Logical Section: Java2blog",
+                "topic": "Document / Java2Blog",
+                "text": "Java2blog",
+                "length": 9,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #64."
+            },
+            {
+                "index": 65,
+                "title": "Logical Section: Follow Author",
+                "topic": "Document / Author / Follow",
+                "text": "Follow Author",
+                "length": 13,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #65."
+            },
+            {
+                "index": 66,
+                "title": "Logical Section: - ",
+                "topic": "Document / General Context",
+                "text": "- \n- \n-",
+                "length": 7,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #66."
+            },
+            {
+                "index": 67,
+                "title": "Logical Section: ### Leave a ReplyCancel reply",
+                "topic": "Document / Replycancel / Reply",
+                "text": "### Leave a ReplyCancel reply",
+                "length": 29,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #67."
+            },
+            {
+                "index": 68,
+                "title": "Logical Section: ## Let’s be Friends",
+                "topic": "Document / Friends",
+                "text": "## Let’s be Friends",
+                "length": 19,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #68."
+            },
+            {
+                "index": 69,
+                "title": "Logical Section: © 2020-22 Java2Blog Privacy Policy",
+                "topic": "Document / Privacy / Java2Blog",
+                "text": "© 2020-22 Java2Blog Privacy Policy",
+                "length": 34,
+                "reason": "[Simulated LLM] Simulated LLM Boundary: Partitioned based on paragraph thematic shift #69."
+            }
+        ],
+        "metrics": {
+            "total_chunks": 69,
+            "avg_size": 153.5,
+            "processing_time_ms": 0.667
+        },
+        "simulated": true
+    }
+}

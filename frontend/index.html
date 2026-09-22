@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore, compare, and master chunking strategies in Retrieval-Augmented Generation (RAG) systems with interactive visualizations and real-time statistics.">
+    <title>Chunking Playground – Interactive GenAI RAG Training Platform</title>
+    <!-- Google Fonts: Outfit (UI) & JetBrains Mono (Code/Chunks) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="index.css?v=19">
+</head>
+<body>
+    <div class="glass-bg-radial"></div>
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header" id="app-header">
+            <div class="header-logo">
+                <div class="logo-icon-wrapper">
+                    <i class="fa-solid fa-cubes logo-icon"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Chunking Playground</h1>
+                    <span class="logo-tagline">Visualizing RAG Document Segmentation</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="download-guide-btn" id="btn-download-guide" title="Download PDF Study Guide with Testleaf Logo">
+                    <i class="fa-solid fa-file-pdf"></i> Download Study Guide
+                </button>
+                <button class="clear-session-btn" id="btn-clear-session" title="Reset Workspace & Clear Saved Files">
+                    <i class="fa-solid fa-trash-can"></i> Reset Workspace
+                </button>
+                <div class="status-indicator disconnect" id="api-status">
+                    <span class="status-dot"></span>
+                    <span class="status-label">Backend Offline</span>
+                </div>
+                <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="workspace-grid">
+            
+            <!-- Left Control Panel -->
+            <aside class="panel left-panel" id="left-controls">
+                <!-- Source Type Selector Toggle -->
+                <div class="card source-selector-card" style="padding: 10px; margin-bottom: 12px;">
+                    <div class="source-type-toggle">
+                        <button class="source-tab active" data-source="upload" id="tab-source-upload">
+                            <i class="fa-solid fa-file-arrow-up"></i> Upload File
+                        </button>
+                        <button class="source-tab" data-source="url" id="tab-source-url">
+                            <i class="fa-solid fa-link"></i> Web URL
+                        </button>
+                        <button class="source-tab" data-source="sample" id="tab-source-sample">
+                            <i class="fa-solid fa-globe"></i> Sample Web
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Web URL Ingestion Card -->
+                <div class="card upload-card" id="url-ingestion-card" style="display: none; margin-bottom: 12px;">
+                    <div class="card-header">
+                        <i class="fa-solid fa-link"></i>
+                        <h2>Web URL Ingestion</h2>
+                    </div>
+                    <div class="card-body" style="padding: 12px; display: flex; flex-direction: column; gap: 12px;">
+                        <p class="upload-hint" style="margin: 0; font-size: 11.5px; color: var(--text-muted);">Enter a website URL to fetch and extract its primary readable content, stripping boilerplate layout.</p>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="url-input" class="premium-input-sm" placeholder="https://developers.cloudflare.com/workers/" style="flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-primary); font-family: var(--font-sans); font-size: 12px;" />
+                            <button class="btn btn-primary btn-sm" id="btn-fetch-url" style="padding: 8px 16px; font-weight: 700; white-space: nowrap; height: 34px;">
+                                <i class="fa-solid fa-download"></i> Fetch
+                            </button>
+                        </div>
+                        <div id="url-fetch-error" style="color: var(--danger); font-size: 11px; display: none; margin-top: 4px; padding: 6px; background: rgba(239, 68, 68, 0.1); border: 0.5px solid rgba(239, 68, 68, 0.3); border-radius: 4px;"></div>
+                    </div>
+                </div>
+
+                <!-- Sample Website Selector Card -->
+                <div class="card samples-card" id="website-sample-card" style="display: none; margin-bottom: 12px;">
+                    <div class="card-header">
+                        <i class="fa-solid fa-globe"></i>
+                        <h2>Sample Websites</h2>
+                    </div>
+                    <div class="samples-list" id="website-samples-container" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px;">
+                        <button class="sample-item-btn" data-website-sample="cloudflare">
+                            <i class="fa-solid fa-cloud"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Cloudflare Workers</span>
+                                <span class="sample-meta">Documentation • High Structure</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-website-sample="python">
+                            <i class="fa-brands fa-python"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Python Tutorial</span>
+                                <span class="sample-meta">Technical Guide • High Structure</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-website-sample="kubernetes">
+                            <i class="fa-solid fa-dharmachakra"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Kubernetes Architecture</span>
+                                <span class="sample-meta">Concept Doc • High Structure</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-website-sample="wikipedia">
+                            <i class="fa-solid fa-wikipedia-w"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Wikipedia: Deep Learning</span>
+                                <span class="sample-meta">Reference Article • Medium Structure</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-website-sample="blog">
+                            <i class="fa-solid fa-blog"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Technical Blog Post</span>
+                                <span class="sample-meta">Blog Article • Low Structure</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Document Upload Card -->
+                <div class="card upload-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <h2>Upload Document</h2>
+                    </div>
+                    <div class="upload-dropzone" id="dropzone">
+                        <input type="file" id="file-input" accept=".txt,.pdf,.docx" hidden />
+                        <i class="fa-solid fa-file-arrow-up upload-icon"></i>
+                        <p class="upload-text">Drag & drop files or <span>browse</span></p>
+                        <p class="upload-hint">Supports TXT, PDF, DOCX (Max 20MB)</p>
+                    </div>
+                </div>
+
+                <!-- Sample Documents Selector -->
+                <div class="card samples-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <h2>Sample Library</h2>
+                    </div>
+                    <div class="samples-list" id="samples-container" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px;">
+                        <button class="sample-item-btn active" data-sample="hr-policy">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">HR Leave Policy</span>
+                                <span class="sample-meta">Policy • 2.4 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="faq">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Company FAQ</span>
+                                <span class="sample-meta">FAQ • 1.8 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="research">
+                            <i class="fa-solid fa-book-open"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">RAG Research Abstract</span>
+                                <span class="sample-meta">Paper • 4.1 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="banking-loan">
+                            <i class="fa-solid fa-landmark"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Banking Loan Policy</span>
+                                <span class="sample-meta">Banking • 2.1 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="insurance-health">
+                            <i class="fa-solid fa-shield-heart"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Insurance Health Policy</span>
+                                <span class="sample-meta">Insurance • 1.5 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="employee-handbook">
+                            <i class="fa-solid fa-book-user" style="font-size: 14px;"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Employee Handbook</span>
+                                <span class="sample-meta">Handbook • 1.1 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="medical-chart">
+                            <i class="fa-solid fa-notes-medical"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Patient Medical Chart</span>
+                                <span class="sample-meta">Medical • 1.2 KB</span>
+                            </div>
+                        </button>
+                        <button class="sample-item-btn" data-sample="technical-doc">
+                            <i class="fa-solid fa-code"></i>
+                            <div class="sample-info">
+                                <span class="sample-title">Workers API Gateway</span>
+                                <span class="sample-meta">Tech Doc • 0.9 KB</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chunking Strategy Selector -->
+                <div class="card strategy-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-sliders"></i>
+                        <h2>Chunking Strategy</h2>
+                    </div>
+                    <div class="strategy-selector">
+                        <label for="strategy-select" class="sr-only">Select Strategy</label>
+                        <select id="strategy-select" class="premium-select">
+                            <option value="fixed">Fixed-Size Character Chunking</option>
+                            <option value="recursive">Recursive Character Chunking</option>
+                            <option value="document">Document-Structure Aware</option>
+                            <option value="semantic">Semantic Similarity Chunking</option>
+                            <option value="query">Query-Aware (Retrieved-Optimized)</option>
+                            <option value="metadata">Metadata-Enhanced</option>
+                            <option value="llm">LLM-Based Intelligent</option>
+                            <option value="agentic">Agentic Workflow (LangGraph)</option>
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Parameters Container -->
+                    <div class="parameters-container" id="parameters-panel">
+                        <div class="parameter-group">
+                            <div class="param-label-wrapper">
+                                <label for="param-chunk-size">Chunk Size (chars)</label>
+                                <span class="param-val" id="val-chunk-size">500</span>
+                            </div>
+                            <input type="range" id="param-chunk-size" min="100" max="3000" step="50" value="500" class="premium-slider" />
+                        </div>
+                        <div class="parameter-group">
+                            <div class="param-label-wrapper">
+                                <label for="param-overlap">Overlap (chars)</label>
+                                <span class="param-val" id="val-overlap">50</span>
+                            </div>
+                            <input type="range" id="param-overlap" min="0" max="500" step="10" value="50" class="premium-slider" />
+                        </div>
+                        <div class="parameter-group" id="param-query-group" style="display: none;">
+                            <div class="param-label-wrapper">
+                                <label for="param-query-text"><i class="fa-solid fa-magnifying-glass"></i> Search Query</label>
+                            </div>
+                            <textarea id="param-query-text" class="premium-textarea" rows="2" placeholder="Enter your retrieval query…" spellcheck="false"></textarea>
+                        </div>
+                        <div class="parameter-group" id="param-metadata-group" style="display: none;">
+                            <div class="param-label-wrapper" style="margin-bottom: 6px;">
+                                <label><i class="fa-solid fa-tags"></i> Metadata Settings</label>
+                            </div>
+                            <div class="checkbox-wrapper" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <input type="checkbox" id="param-meta-autodiscover" checked style="cursor: pointer;" />
+                                <label for="param-meta-autodiscover" style="font-size: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer;">Auto-Discover (Heuristics)</label>
+                            </div>
+                            <div class="metadata-fields-grid" id="param-meta-manual-fields" style="display: none; flex-direction: column; gap: 8px;">
+                                <div class="meta-field-wrapper" style="display: flex; flex-direction: column; gap: 4px;">
+                                    <label for="param-meta-dept" class="mini-label" style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Department</label>
+                                    <input type="text" id="param-meta-dept" class="premium-input-sm" value="HR" placeholder="e.g. HR, IT, Finance" style="width: 100%;" />
+                                </div>
+                                <div class="meta-field-wrapper" style="display: flex; flex-direction: column; gap: 4px;">
+                                    <label for="param-meta-author" class="mini-label" style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Author</label>
+                                    <input type="text" id="param-meta-author" class="premium-input-sm" value="Admin" placeholder="e.g. Admin, Author" style="width: 100%;" />
+                                </div>
+                                <div class="meta-field-wrapper" style="display: flex; flex-direction: column; gap: 4px;">
+                                    <label for="param-meta-version" class="mini-label" style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Version</label>
+                                    <input type="text" id="param-meta-version" class="premium-input-sm" value="1.0" placeholder="e.g. 1.0, 2.0" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="parameter-group" id="param-llm-group" style="display: none;">
+                            <div class="param-label-wrapper" style="margin-bottom: 6px;">
+                                <label><i class="fa-solid fa-brain"></i> LLM Configuration</label>
+                            </div>
+                            <div class="checkbox-wrapper" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <input type="checkbox" id="param-llm-simulated" checked style="cursor: pointer;" />
+                                <label for="param-llm-simulated" style="font-size: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer;">Simulate LLM (No Key Required)</label>
+                            </div>
+                            <div class="llm-fields-grid" id="param-llm-real-fields" style="display: none; flex-direction: column; gap: 8px;">
+                                <div class="meta-field-wrapper" style="display: flex; flex-direction: column; gap: 4px;">
+                                    <label for="param-llm-api-key" class="mini-label" style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Groq API Key</label>
+                                    <input type="password" id="param-llm-api-key" class="premium-input-sm" value="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" placeholder="gsk_..." style="width: 100%;" />
+                                </div>
+                                <div class="meta-field-wrapper" style="display: flex; flex-direction: column; gap: 4px;">
+                                    <label for="param-llm-model" class="mini-label" style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Model Select</label>
+                                    <select id="param-llm-model" class="premium-select" style="padding: 6px 10px; font-size: 12px; height: 34px;">
+                                        <option value="openai/gpt-oss-120b" selected>GPT OSS 120B (openai/gpt-oss-120b)</option>
+                                        <option value="llama3-8b-8192">Llama 3 8B (llama3-8b-8192)</option>
+                                        <option value="llama3-70b-8192">Llama 3 70B (llama3-70b-8192)</option>
+                                        <option value="mixtral-8x7b-32768">Mixtral 8x7B (mixtral-8x7b-32768)</option>
+                                        <option value="gemma2-9b-it">Gemma 2 9B (gemma2-9b-it)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-glow" id="process-chunk-btn">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Apply Chunking</span>
+                    </button>
+                    <button class="btn btn-mongo" id="btn-ingest-mongodb-side" disabled title="Generate chunks first before ingesting" style="margin-top: 8px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Ingest into MongoDB</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Center Document Preview Panel -->
+            <section class="panel center-panel" id="preview-section" aria-label="Document Preview">
+                <div class="card preview-card">
+                    <div class="card-header preview-header">
+                        <div class="header-left">
+                            <i class="fa-solid fa-eye"></i>
+                            <h2>Document Preview</h2>
+                        </div>
+                        <div class="header-right" style="display: flex; gap: 8px; align-items: center;">
+                            <button class="btn btn-secondary btn-sm" id="btn-analyze-doc" title="Analyze document text">
+                                <i class="fa-solid fa-chart-line"></i> Run Analysis
+                            </button>
+                            <span class="doc-badge" id="doc-type-badge">HR Policy</span>
+                        </div>
+                    </div>
+                    <div class="preview-content-wrapper">
+                        <div class="preview-scrollable" id="doc-preview-text" contenteditable="true" spellcheck="false">
+                            Select a sample document or upload your own to begin. You can edit the text here directly to test different scenarios in real-time.
+                        </div>
+                    </div>
+                    <div class="preview-footer">
+                        <span id="preview-word-count"><i class="fa-solid fa-heading"></i> 0 words</span>
+                        <span id="preview-char-count"><i class="fa-solid fa-font"></i> 0 characters</span>
+                        <span id="preview-sentence-count"><i class="fa-solid fa-quote-left"></i> 0 sentences</span>
+                        <span id="preview-paragraph-count"><i class="fa-solid fa-paragraph"></i> 0 paragraphs</span>
+                        <span id="preview-token-count"><i class="fa-solid fa-ticket"></i> 0 tokens</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar Panel: Stats & Teaching -->
+            <aside class="panel right-panel" id="right-sidebar">
+                <!-- Stats & Analysis Card -->
+                <div class="card stats-card">
+                    <div class="card-header tabbed-header">
+                        <button class="tab-btn active" id="tab-analysis" aria-label="Show document analysis">
+                            <i class="fa-solid fa-chart-pie"></i> Analysis
+                        </button>
+                        <button class="tab-btn" id="tab-stats" aria-label="Show segmentation statistics">
+                            <i class="fa-solid fa-chart-simple"></i> Segmentation
+                        </button>
+                    </div>
+                    
+                    <!-- Document Analysis Tab Content -->
+                    <div class="tab-content" id="analysis-tab-content">
+                        <div class="analysis-section">
+                            <h3>Document Type</h3>
+                            <div class="doc-type-display" id="analysis-doc-type">---</div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>Readability Metrics</h3>
+                            <div class="analysis-grid">
+                                <div class="analysis-box">
+                                    <span class="analysis-label">Avg. Sentence Length</span>
+                                    <span class="analysis-value" id="analysis-avg-sentence-len">0 <span class="analysis-unit">words</span></span>
+                                </div>
+                                <div class="analysis-box">
+                                    <span class="analysis-label">Longest Paragraph</span>
+                                    <span class="analysis-value" id="analysis-longest-para">0 <span class="analysis-unit">words</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>Token & Context Usage</h3>
+                            <div class="context-progress-wrapper">
+                                <div class="context-progress-info">
+                                    <span>Llama 3 Context (8K)</span>
+                                    <span id="analysis-context-pct">0%</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" id="analysis-context-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                                                <!-- Structure & Ingestion Analysis Panel -->
+                        <div class="analysis-section" id="structure-analysis-panel" style="display: none; border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 12px;">
+                            <h3>Structure & Ingestion Analysis</h3>
+                            
+                            <div class="analysis-box" style="padding: 10px; margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="analysis-label" style="font-size: 11px;">Source Type</span>
+                                    <span class="doc-badge" id="web-analysis-source-type" style="font-size: 11px; padding: 2px 8px; margin: 0; background: var(--primary-glow); color: var(--text-primary); border: 0.5px solid var(--primary);">---</span>
+                                </div>
+                            </div>
+
+                            <div class="structure-confidence-wrapper" style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                <span style="font-size: 11.5px; font-weight: 600; color: var(--text-primary);">Structure Confidence:</span>
+                                <span class="confidence-badge" id="structure-confidence-badge" style="font-family: var(--font-sans); font-size: 12.5px; font-weight: 800; color: var(--primary); padding: 2px 8px; background: var(--primary-glow); border-radius: var(--radius-sm);">0%</span>
+                            </div>
+                            
+                            <div id="no-structure-alert" style="display: none; padding: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); color: var(--danger); font-size: 11.5px; margin-bottom: 12px; text-align: center;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> No Structure Detected
+                            </div>
+
+                            <ul class="structure-checks-list" id="structure-checks-list" style="list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 0; margin: 0 0 12px 0;">
+                                <li id="check-title" style="font-size: 11px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 12px;"></i>
+                                    <span>Title Found</span>
+                                </li>
+                                <li id="check-sections" style="font-size: 11px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 12px;"></i>
+                                    <span>Main Sections Found</span>
+                                </li>
+                                <li id="check-subsections" style="font-size: 11px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 12px;"></i>
+                                    <span>Subsections Found</span>
+                                </li>
+                                <li id="check-lists" style="font-size: 11px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 12px;"></i>
+                                    <span>Lists Found</span>
+                                </li>
+                                <li id="check-tables" style="font-size: 11px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 12px;"></i>
+                                    <span>Tables Found</span>
+                                </li>
+                            </ul>
+
+                            <div class="analysis-box" style="padding: 10px; margin-bottom: 12px;">
+                                <span class="analysis-label" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Detected Heuristics</span>
+                                <span id="structure-reason-text" style="font-size: 11px; font-weight: normal; color: var(--text-muted); line-height: 1.4; display: block; white-space: pre-line;">- No components detected.</span>
+                            </div>
+
+                            <div class="analysis-box" style="padding: 10px; border-left: 3px solid var(--primary); background: rgba(139, 92, 246, 0.05); margin-bottom: 12px;">
+                                <span class="analysis-label" style="font-size: 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Chunking Recommendation</span>
+                                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                                    <i class="fa-solid fa-lightbulb" style="color: var(--warning); font-size: 11px;"></i>
+                                    <span id="structure-recommendation-badge" style="font-size: 11.5px; font-weight: 700; color: var(--text-primary);">Recursive Character Chunking</span>
+                                </div>
+                                <span id="structure-recommendation-reason" style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block;">Structure is low. Use recursive splitting to keep sentence blocks whole.</span>
+                            </div>
+
+                            <!-- Educational Visualization Flow -->
+                            <div class="structure-visual-flow" style="margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px;">
+                                <h4 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--secondary);"><i class="fa-solid fa-route"></i> Selection Flow</h4>
+                                <div class="flowchart-container" style="display: flex; flex-direction: column; gap: 4px; font-size: 10.5px; align-items: center; width: 100%;">
+                                    <div id="flow-node-source" class="flowchart-node" style="width: 100%; text-align: center; padding: 6px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; transition: all var(--transition-smooth);">Source: Unknown</div>
+                                    <div style="font-size: 8px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                    <div id="flow-node-detection" class="flowchart-node" style="width: 100%; text-align: center; padding: 6px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; transition: all var(--transition-smooth);">Structure Detection</div>
+                                    <div style="font-size: 8px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                    <div id="flow-node-rec" class="flowchart-node" style="width: 100%; text-align: center; padding: 6px; background: var(--primary-glow); color: var(--primary); border: 0.5px solid var(--primary); border-radius: var(--radius-sm); font-weight: 700; transition: all var(--transition-smooth);">Recommended Chunker</div>
+                                    <div style="font-size: 8px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                    <div id="flow-node-generation" class="flowchart-node" style="width: 100%; text-align: center; padding: 6px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; transition: all var(--transition-smooth);">Chunk Generation</div>
+                                </div>
+                            </div>
+                        </div>                        </div>
+                    </div>
+
+                    <!-- Segmentation Stats Tab Content -->
+                    <div class="tab-content hidden" id="stats-tab-content">
+                        <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0;">
+                            <div class="stat-box">
+                                <span class="stat-label">Total Chunks</span>
+                                <span class="stat-value" id="stat-total-chunks">0</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Avg. Chunk Size</span>
+                                <span class="stat-value" id="stat-avg-size">0 <span class="stat-unit">chars</span></span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Est. Tokens</span>
+                                <span class="stat-value" id="stat-est-tokens">0</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Time Elapsed</span>
+                                <span class="stat-value" id="stat-time">0 <span class="stat-unit">ms</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaching Mode Card -->
+                <div class="card teaching-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h2>Teaching Mode</h2>
+                    </div>
+                    <div class="teaching-scrollable">
+                        <div class="teaching-content" id="teaching-content-container">
+                            <div class="teaching-intro">
+                                <h3>Understand Chunking Strategies</h3>
+                                <p>In RAG (Retrieval-Augmented Generation), chunking is the process of breaking input text into smaller segments. Choosing the right size and technique ensures the LLM receives highly relevant context.</p>
+                            </div>
+                            <div class="teaching-details hidden" id="strategy-details">
+                                <h3 id="teach-title">Fixed-Size Chunking</h3>
+                                <p class="teach-desc" id="teach-definition">Splits text into chunks of exact character lengths with a specific overlap. Simple and fast, but completely ignores document structure and semantic boundaries.</p>
+                                
+                                <!-- Teaching Sub-Tabs Navigation -->
+                                <div class="teaching-subtabs">
+                                    <button class="teach-tab-btn active" data-teach-tab="overview">Overview</button>
+                                    <button class="teach-tab-btn" data-teach-tab="applications">Applications</button>
+                                    <button class="teach-tab-btn" data-teach-tab="best-practices">Practices</button>
+                                    <button class="teach-tab-btn" data-teach-tab="interview">Q&A Prep</button>
+                                    <button class="teach-tab-btn" data-teach-tab="workflow" id="teach-tab-btn-workflow" style="display: none;">Workflow</button>
+                                </div>
+
+                                <!-- Sub-Tab: Overview -->
+                                <div class="teach-tab-content" id="teach-tab-overview">
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-circle-check text-success"></i> Advantages</h4>
+                                        <ul id="teach-advantages">
+                                            <li>Extremely fast computation</li>
+                                            <li>Predictable token consumption</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-triangle-exclamation text-warning"></i> Disadvantages</h4>
+                                        <ul id="teach-disadvantages">
+                                            <li>Breaks sentences/words in half</li>
+                                            <li>Loss of semantic context</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="teach-section" id="teach-why-companies-use-section" style="display: none;">
+                                        <h4><i class="fa-solid fa-lightbulb text-info"></i> Why Companies Use It</h4>
+                                        <ul id="teach-why-companies-use"></ul>
+                                    </div>
+                                    
+                                    <!-- Dynamic visual flowchart for Query-Aware strategy (Feature 2) -->
+                                    <div id="teach-query-flow-diagram" style="display: none; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px;">
+                                        <h4 style="font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--secondary);"><i class="fa-solid fa-route"></i> Query-Aware Retrieval Flow</h4>
+                                        <div class="teach-query-flow-list" style="display: flex; flex-direction: column; gap: 4px; font-size: 10.5px; align-items: center;">
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">User Query</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">Query Embedding</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">Similarity Scoring</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">Relevant Region Detection</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">Chunk Boundary Creation</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px;">Vector Store</div>
+                                            <div style="font-size: 9px; color: var(--text-disabled);"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="flow-node" style="width: 100%; text-align: center; padding: 4px 8px; background: var(--success-glow); color: var(--success); border: 0.5px solid var(--success); border-radius: 4px; font-weight: 700;">RAG Retrieval</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-Tab: Applications -->
+                                <div class="teach-tab-content hidden" id="teach-tab-applications">
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-briefcase text-primary"></i> Real World Use Cases</h4>
+                                        <ul id="teach-use-cases"></ul>
+                                    </div>
+
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-building text-secondary"></i> Industry Examples</h4>
+                                        <ul id="teach-industry-examples"></ul>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-Tab: Best Practices -->
+                                <div class="teach-tab-content hidden" id="teach-tab-best-practices">
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-thumbs-up text-success"></i> Best Practices</h4>
+                                        <ul id="teach-best-practices"></ul>
+                                    </div>
+
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-circle-xmark text-danger"></i> Common Mistakes</h4>
+                                        <ul id="teach-common-mistakes"></ul>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-Tab: Q&A Prep -->
+                                <div class="teach-tab-content hidden" id="teach-tab-interview">
+                                    <div class="teach-section">
+                                        <h4><i class="fa-solid fa-graduation-cap text-accent-orange"></i> Interview Q&A</h4>
+                                        <div id="teach-interview-questions" class="interview-accordion"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-Tab: Workflow -->
+                                <div class="teach-tab-content hidden" id="teach-tab-workflow">
+                                    <div class="teach-section" style="text-align: left;">
+                                        <h4><i class="fa-solid fa-route text-secondary"></i> Document Segmentation Steps</h4>
+                                        <div class="visual-workflow-steps" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 1</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Detect Document Structure</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Analyze layout properties, line spacings, and formats to parse structural lines.</p>
+                                                </div>
+                                            </div>
+                                            <div class="workflow-arrow" style="text-align: center; color: var(--text-disabled); font-size: 12px;"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--secondary); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 2</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Identify Titles & Headings</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Apply structural regular expressions to detect header lines (Markdown headings, numbered sections, QA lines, capitalized title lines).</p>
+                                                </div>
+                                            </div>
+                                            <div class="workflow-arrow" style="text-align: center; color: var(--text-disabled); font-size: 12px;"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--accent-orange); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 3</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Build Section Hierarchy</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Resolve nesting levels (e.g. H1 parent of H2, H2 parent of H3) and build the section structure tree.</p>
+                                                </div>
+                                            </div>
+                                            <div class="workflow-arrow" style="text-align: center; color: var(--text-disabled); font-size: 12px;"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 4</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Align Chunks with Boundaries</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Form chunk segments exactly matching heading boundaries, preventing text fragmentation.</p>
+                                                </div>
+                                            </div>
+                                            <div class="workflow-arrow" style="text-align: center; color: var(--text-disabled); font-size: 12px;"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 5</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Attach Metadata</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Link level, section order, parent headers, and chunk indexes for rich contextual filtering.</p>
+                                                </div>
+                                            </div>
+                                            <div class="workflow-arrow" style="text-align: center; color: var(--text-disabled); font-size: 12px;"><i class="fa-solid fa-arrow-down"></i></div>
+                                            <div class="workflow-step" style="display: flex; gap: 8px; padding: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                                                <div class="step-num" style="font-size: 10px; font-weight: 800; background: var(--secondary); color: white; padding: 2px 6px; border-radius: 4px; height: fit-content; margin-top: 2px;">Step 6</div>
+                                                <div class="step-content">
+                                                    <h5 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Generate Final Chunks</h5>
+                                                    <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Output final coherent document chunks ready to be stored in the vector database.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Bottom Chunk Output Area -->
+        <footer class="bottom-section">
+            <div class="panel output-panel" id="output-section">
+                <div class="card output-card">
+                    <div class="card-header output-header tabbed-header" style="justify-content: space-between; align-items: center; padding: 0 16px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="tab-btn active" id="btn-main-chunks">
+                                <i class="fa-solid fa-cubes"></i> Chunks View
+                            </button>
+                            <button class="tab-btn" id="btn-main-compare">
+                                <i class="fa-solid fa-chart-column"></i> Comparison Dashboard
+                            </button>
+                            <button class="tab-btn" id="btn-main-simulator">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i> RAG Simulator
+                            </button>
+                        </div>
+                        <div class="output-actions" style="display: flex; gap: 8px; padding: 8px 0; align-items: center;">
+                            <button class="btn btn-mongo btn-sm" id="btn-ingest-mongodb" disabled title="Generate chunks first before ingesting">
+                                <i class="fa-solid fa-database"></i> Proceed to Ingest into MongoDB
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="btn-toggle-tree" style="display: none;">
+                                <i class="fa-solid fa-sitemap"></i> Tree View
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="btn-toggle-view">
+                                <i class="fa-solid fa-grip"></i> Grid View
+                            </button>
+                        </div>
+                    </div>
+                    <div class="output-content-wrapper">
+                        <!-- Container for active chunking strategy outputs -->
+                        <div id="single-strategy-container" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                            <!-- Metadata Sub-Navigation View Selector -->
+                            <div id="metadata-view-tabs" class="metadata-view-tabs" style="display: none;">
+                                <button class="meta-tab-btn active" data-view="cards"><i class="fa-solid fa-square-poll-horizontal"></i> Chunk Cards</button>
+                                <button class="meta-tab-btn" data-view="timeline"><i class="fa-solid fa-route"></i> Timeline Flow</button>
+                                <button class="meta-tab-btn" data-view="comparison"><i class="fa-solid fa-scale-balanced"></i> Strategy Comparison</button>
+                            </div>
+                            
+                            <!-- Agentic Sub-Navigation View Selector -->
+                            <div id="agentic-view-tabs" class="metadata-view-tabs" style="display: none;">
+                                <button class="agentic-tab-btn active" data-view="graph"><i class="fa-solid fa-route"></i> Graph Execution Flow</button>
+                                <button class="agentic-tab-btn" data-view="chunks"><i class="fa-solid fa-square-poll-horizontal"></i> Selected Chunks Output</button>
+                            </div>
+
+                            <!-- Document Sub-Navigation View Selector -->
+                            <div id="document-view-tabs" class="metadata-view-tabs" style="display: none;">
+                                <button class="doc-tab-btn active" data-view="structure"><i class="fa-solid fa-sitemap"></i> Structure Tree</button>
+                                <button class="doc-tab-btn" data-view="cards"><i class="fa-solid fa-square-poll-horizontal"></i> Chunk Cards</button>
+                                <button class="doc-tab-btn" data-view="metadata"><i class="fa-solid fa-list-check"></i> Metadata Panel</button>
+                                <button class="doc-tab-btn" data-view="mapping"><i class="fa-solid fa-diagram-project"></i> Mapping Flow</button>
+                            </div>
+
+                            <!-- Semantic Sub-Navigation View Selector -->
+                            <div id="semantic-view-tabs" class="metadata-view-tabs" style="display: none; margin-bottom: 12px;">
+                                <button class="sem-tab-btn active" data-view="visualization"><i class="fa-solid fa-chart-line"></i> Similarity Flow</button>
+                                <button class="sem-tab-btn" data-view="cards"><i class="fa-solid fa-square-poll-horizontal"></i> Chunk Cards</button>
+                                <button class="sem-tab-btn" data-view="concept"><i class="fa-solid fa-graduation-cap"></i> Concept Lab</button>
+                                <button class="sem-tab-btn" data-view="insights"><i class="fa-solid fa-lightbulb"></i> Educational Insights</button>
+                            </div>
+
+                            <!-- Query-Aware Sub-Navigation View Selector -->
+                            <div id="query-view-tabs" class="metadata-view-tabs" style="display: none; margin-bottom: 12px;">
+                                <button class="query-tab-btn active" data-view="simulation"><i class="fa-solid fa-magnifying-glass-chart"></i> Query Simulation</button>
+                                <button class="query-tab-btn" data-view="cards"><i class="fa-solid fa-square-poll-horizontal"></i> Chunk Cards</button>
+                                <button class="query-tab-btn" data-view="concept"><i class="fa-solid fa-graduation-cap"></i> Concept Lab</button>
+                            </div>
+
+                            <!-- Metadata Filter & Search Bar -->
+                            <div id="metadata-filter-bar" class="metadata-filter-bar" style="display: none;">
+                                <div class="filter-group">
+                                    <i class="fa-solid fa-magnifying-glass filter-icon"></i>
+                                    <input type="text" id="meta-filter-search" class="filter-input" placeholder="Search metadata values..." />
+                                </div>
+                                <div class="filter-group">
+                                    <i class="fa-solid fa-filter filter-icon"></i>
+                                    <select id="meta-filter-dept" class="filter-select">
+                                        <option value="all">All Departments</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="meta-filter-clear">
+                                    <i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters
+                                </button>
+                            </div>
+
+                            <!-- Main Cards Grid -->
+                            <div class="chunks-container list-layout" id="chunks-output-grid">
+                                <div class="empty-output-state">
+                                    <i class="fa-solid fa-cubes empty-icon animate-pulse"></i>
+                                    <h3>No Chunks Generated Yet</h3>
+                                    <p>Click the "Apply Chunking" button to segment your document and visualize the generated pieces.</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Panel -->
+                            <div id="meta-timeline-panel" class="meta-sub-panel" style="display: none;">
+                                <div class="timeline-container" id="meta-timeline-flow">
+                                    <!-- Dynamic timeline elements will render here -->
+                                </div>
+                            </div>
+
+                            <!-- Comparison Panel -->
+                            <div id="meta-comparison-panel" class="meta-sub-panel" style="display: none;">
+                                <div class="comparison-dashboard" id="meta-comparison-dashboard">
+                                    <!-- Dynamic comparison grid will render here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Agentic Graph Trace Panel -->
+                            <div id="agentic-workflow-panel" class="meta-sub-panel" style="display: none;">
+                                <div class="agentic-summary-bar" style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                                    <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative;">
+                                        <span class="stat-label">Resolved Strategy</span>
+                                        <span class="stat-value" id="agentic-resolved-strategy" style="color: var(--secondary); font-size: 15px; font-weight: 800;">---</span>
+                                    </div>
+                                    <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative;">
+                                        <span class="stat-label">Document Class</span>
+                                        <span class="stat-value" id="agentic-doc-class" style="color: var(--primary); font-size: 15px; font-weight: 800;">---</span>
+                                    </div>
+                                    <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 4px;">
+                                        <span class="stat-label">Confidence Score</span>
+                                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                            <span class="stat-value" id="agentic-confidence" style="color: var(--accent-orange); font-size: 15px; font-weight: 800;">---</span>
+                                            <span id="agentic-confidence-badge" class="confidence-badge">---</span>
+                                        </div>
+                                        <div class="progress-bar-bg" style="height: 6px; width: 100%; margin-top: 4px; background: rgba(255, 255, 255, 0.05);">
+                                            <div class="progress-bar-fill" id="agentic-confidence-bar" style="width: 0%; height: 100%; background: var(--accent-orange); transition: width var(--transition-smooth);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="agentic-panel-split">
+                                    <!-- Left side: Visual flow graph -->
+                                    <div class="agentic-graph-wrapper card">
+                                        <div class="graph-title-label"><i class="fa-solid fa-network-wired"></i> LangGraph Stateful Execution Flow</div>
+                                        <div class="langgraph-visual-nodes">
+                                            <!-- Upload Start Node -->
+                                            <div class="graph-node completed" id="gnode-upload">
+                                                <div class="node-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                                                <div class="node-label">Document Uploaded</div>
+                                            </div>
+                                            <div class="graph-edge"><i class="fa-solid fa-arrow-down"></i></div>
+                                            
+                                            <!-- Classifier Node -->
+                                            <div class="graph-node" id="gnode-classifier">
+                                                <div class="node-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                                <div class="node-label">
+                                                    Classifier Node
+                                                    <span class="custom-tooltip-trigger" data-tooltip="Determines the document category.">
+                                                        <i class="fa-solid fa-circle-info tooltip-icon"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="node-badge" id="gbadge-classifier">---</div>
+                                            </div>
+                                            <div class="graph-edge"><i class="fa-solid fa-arrow-down"></i></div>
+                                            
+                                            <!-- Decision Node -->
+                                            <div class="graph-node" id="gnode-decision">
+                                                <div class="node-icon"><i class="fa-solid fa-route"></i></div>
+                                                <div class="node-label">
+                                                    Decision Router Node
+                                                    <span class="custom-tooltip-trigger" data-tooltip="Chooses the most suitable chunking strategy.">
+                                                        <i class="fa-solid fa-circle-info tooltip-icon"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="node-badge" id="gbadge-decision">---</div>
+                                            </div>
+                                            <div class="graph-edge"><i class="fa-solid fa-arrow-down"></i></div>
+                                            
+                                            <!-- Chunking Node -->
+                                            <div class="graph-node" id="gnode-chunking">
+                                                <div class="node-icon"><i class="fa-solid fa-scissors"></i></div>
+                                                <div class="node-label">
+                                                    Chunking Node
+                                                    <span class="custom-tooltip-trigger" data-tooltip="Executes the selected chunking method.">
+                                                        <i class="fa-solid fa-circle-info tooltip-icon"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="node-badge" id="gbadge-chunking">---</div>
+                                            </div>
+                                            <div class="graph-edge"><i class="fa-solid fa-arrow-down"></i></div>
+                                            
+                                            <!-- Evaluation Node -->
+                                            <div class="graph-node" id="gnode-evaluation">
+                                                <div class="node-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                                                <div class="node-label">
+                                                    Evaluation Node
+                                                    <span class="custom-tooltip-trigger" data-tooltip="Measures chunk quality and effectiveness.">
+                                                        <i class="fa-solid fa-circle-info tooltip-icon"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="node-badge" id="gbadge-evaluation">---</div>
+                                            </div>
+                                            <div class="graph-edge"><i class="fa-solid fa-arrow-down"></i></div>
+                                            
+                                            <!-- Display / END Node -->
+                                            <div class="graph-node end-node" id="gnode-end">
+                                                <div class="node-icon"><i class="fa-solid fa-cubes"></i></div>
+                                                <div class="node-label">Display & Retrieve (END)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Right side: Detail Trace Logs -->
+                                    <div class="agentic-trace-wrapper">
+                                        <div class="graph-title-label"><i class="fa-solid fa-receipt"></i> Step Execution Trace Details</div>
+                                        <div class="agentic-trace-container" id="agentic-trace-timeline">
+                                            <!-- Dynamic LangGraph nodes list will render here -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Educational Insights Grid -->
+                                <div class="agentic-insights-grid">
+                                    <!-- Left Column: Timeline & Learner Insights -->
+                                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                                        <!-- Thinking Timeline Card -->
+                                        <div class="card" style="padding: 16px;">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-timeline" style="color: var(--primary); margin-right: 6px;"></i> Agent Thinking Timeline
+                                            </div>
+                                            <div class="thinking-timeline" id="agentic-thinking-timeline">
+                                                <!-- Steps will dynamically render here -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Learner Insight Panel Card -->
+                                        <div class="card" style="padding: 16px; background: rgba(139, 92, 246, 0.02); border: 1px dashed var(--primary-glow);">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-graduation-cap" style="color: var(--success); margin-right: 6px;"></i> What Did The Agent Learn From This Document?
+                                            </div>
+                                            <div id="agentic-learner-insight" class="learner-insight-content">
+                                                <!-- Insight content will dynamically render here -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Column: Strategy Analysis & Rejected Reasons -->
+                                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                                        <!-- Strategy Selection Analysis Card -->
+                                        <div class="card" style="padding: 16px;">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-chart-simple" style="color: var(--secondary); margin-right: 6px;"></i> Strategy Selection Analysis
+                                            </div>
+                                            <div id="agentic-strategy-scores" class="strategy-scores-container">
+                                                <!-- Scores list will dynamically render here -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Why Other Strategies Were Not Selected Card -->
+                                        <div class="card" style="padding: 16px;">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-circle-xmark" style="color: var(--danger); margin-right: 6px;"></i> Why Other Strategies Were Not Selected
+                                            </div>
+                                            <div id="agentic-rejected-reasons" class="rejected-reasons-container">
+                                                <!-- Rejection explanations will dynamically render here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Structure Tree Panel -->
+                            <div id="doc-structure-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="doc-panel-layout" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; width: 100%;">
+                                    <!-- Left side: Interactive Tree -->
+                                    <div class="card doc-tree-card" style="padding: 16px; text-align: left;">
+                                        <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                            <i class="fa-solid fa-folder-tree" style="color: var(--primary); margin-right: 6px;"></i> Document Structure Tree
+                                        </div>
+                                        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">Click on a heading to scroll to and highlight its generated chunk card.</p>
+                                        <div id="doc-hierarchy-tree" class="doc-hierarchy-tree">
+                                            <!-- Dynamic hierarchy tree goes here -->
+                                        </div>
+                                    </div>
+                                    <!-- Right side: Analytics & Preservation & Insights -->
+                                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                                        <!-- Analytics Cards -->
+                                        <div class="card doc-analytics-card" style="padding: 16px;">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; text-align: left; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-chart-bar" style="color: var(--secondary); margin-right: 6px;"></i> Structure Analytics Dashboard
+                                            </div>
+                                            <div class="analytics-cards-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                                <div class="stat-box" style="padding: 8px 12px;">
+                                                    <span class="stat-label" style="font-size: 9px;">Total Headings</span>
+                                                    <span class="stat-value" id="doc-stat-headings" style="font-size: 16px; font-weight: 800; color: var(--primary);">0</span>
+                                                </div>
+                                                <div class="stat-box" style="padding: 8px 12px;">
+                                                    <span class="stat-label" style="font-size: 9px;">Subheadings</span>
+                                                    <span class="stat-value" id="doc-stat-subheadings" style="font-size: 16px; font-weight: 800; color: var(--secondary);">0</span>
+                                                </div>
+                                                <div class="stat-box" style="padding: 8px 12px;">
+                                                    <span class="stat-label" style="font-size: 9px;">Total Sections</span>
+                                                    <span class="stat-value" id="doc-stat-sections" style="font-size: 16px; font-weight: 800; color: var(--accent-orange);">0</span>
+                                                </div>
+                                                <div class="stat-box" style="padding: 8px 12px;">
+                                                    <span class="stat-label" style="font-size: 9px;">Total Chunks</span>
+                                                    <span class="stat-value" id="doc-stat-chunks" style="font-size: 16px; font-weight: 800; color: var(--success);">0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Preservation Scores -->
+                                        <div class="card doc-preservation-card" style="padding: 16px; text-align: left;">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                                <i class="fa-solid fa-gauge-high" style="color: var(--success); margin-right: 6px;"></i> Structure Preservation Score
+                                            </div>
+                                            <div class="preservation-metrics-list" style="display: flex; flex-direction: column; gap: 10px;">
+                                                <div>
+                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                                                        <span>Overall Structure Preservation</span>
+                                                        <span id="doc-score-overall" style="font-weight: 700; color: var(--success);">0%</span>
+                                                    </div>
+                                                    <div class="progress-bar-bg" style="height: 6px;"><div class="progress-bar-fill bg-success" id="doc-bar-overall" style="width: 0%; height: 100%;"></div></div>
+                                                </div>
+                                                <div>
+                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                                                        <span>Headings Preserved</span>
+                                                        <span id="doc-score-headings" style="font-weight: 700; color: var(--primary);">0%</span>
+                                                    </div>
+                                                    <div class="progress-bar-bg" style="height: 6px;"><div class="progress-bar-fill" id="doc-bar-headings" style="width: 0%; height: 100%; background: var(--primary);"></div></div>
+                                                </div>
+                                                <div>
+                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                                                        <span>Sections Preserved</span>
+                                                        <span id="doc-score-sections" style="font-weight: 700; color: var(--secondary);">0%</span>
+                                                    </div>
+                                                    <div class="progress-bar-bg" style="height: 6px;"><div class="progress-bar-fill" id="doc-bar-sections" style="width: 0%; height: 100%; background: var(--secondary);"></div></div>
+                                                </div>
+                                                <div>
+                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                                                        <span>Subsections Preserved</span>
+                                                        <span id="doc-score-subsections" style="font-weight: 700; color: var(--accent-orange);">0%</span>
+                                                    </div>
+                                                    <div class="progress-bar-bg" style="height: 6px;"><div class="progress-bar-fill" id="doc-bar-subsections" style="width: 0%; height: 100%; background: var(--accent-orange);"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Educational Insight Panel -->
+                                        <div class="card doc-insight-card" style="padding: 16px; text-align: left; background: rgba(16, 185, 129, 0.03); border: 1px dashed var(--success-glow);">
+                                            <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">
+                                                <i class="fa-solid fa-graduation-cap" style="color: var(--success); margin-right: 6px;"></i> Why Document Chunking is better than Fixed Chunking
+                                            </div>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                                                Document Chunking splits text exactly at logical headings, preserving complete contexts. In contrast, fixed chunking cuts lines at arbitrary boundaries, frequently breaking sentences and words.
+                                            </p>
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 10px;">
+                                                <div>
+                                                    <span style="font-weight: 700; color: var(--success); display: block; margin-bottom: 4px;">✓ Highly Effective:</span>
+                                                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; color: var(--text-secondary);">
+                                                        <li><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 4px;"></i> Research Papers</li>
+                                                        <li><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 4px;"></i> Policy Documents</li>
+                                                        <li><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 4px;"></i> API Documentation</li>
+                                                        <li><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 4px;"></i> Knowledge Bases</li>
+                                                        <li><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 4px;"></i> Legal Contracts</li>
+                                                    </ul>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: 700; color: var(--danger); display: block; margin-bottom: 4px;">✗ Performs Poorly:</span>
+                                                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; color: var(--text-secondary);">
+                                                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger); margin-right: 4px;"></i> Plain Text Files</li>
+                                                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger); margin-right: 4px;"></i> OCR Documents</li>
+                                                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger); margin-right: 4px;"></i> Poorly Formatted Files</li>
+                                                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger); margin-right: 4px;"></i> No Headings</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Metadata Panel -->
+                            <div id="doc-metadata-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 16px; text-align: left; width: 100%;">
+                                    <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">
+                                        <i class="fa-solid fa-list-check" style="color: var(--primary); margin-right: 6px;"></i> Chunk Metadata Viewer
+                                    </div>
+                                    <div id="doc-metadata-viewer-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
+                                        <!-- Dynamic metadata cards will render here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <!-- Semantic Similarity Flow Panel -->
+                            <div id="sem-visualization-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 16px; text-align: left; width: 100%;">
+                                    <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-bottom: 12px;">
+                                        <i class="fa-solid fa-chart-line" style="color: var(--secondary); margin-right: 6px;"></i> Sentence Similarity Flow & Topic Boundaries
+                                    </div>
+                                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">This flow graph shows the cosine similarity between consecutive sentences. When similarity drops below the threshold, a topic boundary split is created.</p>
+                                    
+                                    <div class="semantic-visualization-layout">
+                                        <!-- Left Column: Flow of sentences and similarity scores -->
+                                        <div class="card" style="padding: 16px; max-height: 500px; overflow-y: auto;">
+                                            <h3 style="font-size: 12px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">Sentence Similarity Flow (FEATURE 3)</h3>
+                                            <div id="sem-flow-container" class="sem-flow-container">
+                                                <!-- Dynamic sentence flow elements -->
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Right Column: Topic Boundary Detection Details -->
+                                        <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+                                            <h3 style="font-size: 12px; font-weight: 700; color: var(--text-primary);">Topic Boundary Tracker (FEATURE 4)</h3>
+                                            <div id="sem-boundary-container" class="sem-boundary-container" style="display: flex; flex-direction: column; gap: 12px;">
+                                                <!-- Dynamic topic boundary nodes -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Semantic Concept Lab Panel -->
+                            <div id="sem-concept-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 20px; text-align: left; width: 100%; display: flex; flex-direction: column; gap: 20px;">
+                                    <div class="panel-header-title" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 4px;">
+                                        <i class="fa-solid fa-graduation-cap" style="color: var(--primary); margin-right: 6px;"></i> Semantic Concept Lab
+                                    </div>
+                                    
+                                    <div class="semantic-concept-grid">
+                                        <!-- Embedding Concept Visualization (FEATURE 5) -->
+                                        <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; border-left: 3px solid var(--primary);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                                                <i class="fa-solid fa-brain" style="color: var(--primary); margin-right: 6px;"></i> What is an Embedding?
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                                                Embeddings convert human text into numerical representations (vectors) that capture meaning. 
+                                                By placing sentences in a mathematical space, we can measure how close they are in meaning, without relying on exact word matches.
+                                            </p>
+                                            <div class="concept-flow">
+                                                <div class="concept-step"><span class="step-badge">1</span> <b>Sentence:</b> "FastAPI is fast"</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge">2</span> <b>Embedding Vector:</b> <span style="font-family: var(--font-mono); font-size: 10px; color: var(--secondary);">[0.12, -0.45, ..., 0.89]</span></div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge">3</span> <b>Similarity Calc:</b> Cosine distance between vectors</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge">4</span> <b>Chunk Decision:</b> Split if similarity &lt; threshold</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Fixed vs Semantic Comparison Example (FEATURE 6) -->
+                                        <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; border-left: 3px solid var(--secondary);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                                                <i class="fa-solid fa-code-compare" style="color: var(--secondary); margin-right: 6px;"></i> Fixed-Size vs. Semantic Chunking
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                                                Fixed chunking splits text blindly at a character or token count, which mixes different topics or breaks key sentences.
+                                                Semantic chunking waits for the topic to shift before starting a new chunk.
+                                            </p>
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                                <div class="comparison-side">
+                                                    <div style="font-size: 11px; font-weight: 700; color: var(--danger); margin-bottom: 6px;">Fixed Chunking</div>
+                                                    <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">
+                                                        <b>Chunk 1:</b><br/>
+                                                        - AI Introduction<br/>
+                                                        - AI Applications<br/>
+                                                        <span style="color: var(--danger); font-weight: 700;">- Stock Market</span> (mixed!)
+                                                    </div>
+                                                </div>
+                                                <div class="comparison-side">
+                                                    <div style="font-size: 11px; font-weight: 700; color: var(--success); margin-bottom: 6px;">Semantic Chunking</div>
+                                                    <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">
+                                                        <b>Chunk 1:</b><br/>
+                                                        - AI Introduction<br/>
+                                                        - AI Applications<br/>
+                                                        <hr style="border-color: var(--border); margin: 4px 0;"/>
+                                                        <b>Chunk 2:</b><br/>
+                                                        - Stock Market (clean split!)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="semantic-concept-grid">
+                                        <!-- Similarity Threshold Demonstration (FEATURE 7) -->
+                                        <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; border-left: 3px solid var(--accent-orange);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                                                <i class="fa-solid fa-sliders" style="color: var(--accent-orange); margin-right: 6px;"></i> How Similarity Threshold Affects Output
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                                                The similarity threshold controls how strictly sentences must relate to stay in the same chunk. 
+                                                Adjusting this value alters the chunk size and total count dynamically.
+                                            </p>
+                                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                <div class="threshold-demo-item">
+                                                    <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--accent-orange);">Threshold = 0.90</span>
+                                                    <span style="font-size: 10px; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-sitemap" style="color: var(--primary);"></i> Result: <b>Many Small Chunks</b></span>
+                                                </div>
+                                                <div class="threshold-demo-item">
+                                                    <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--secondary);">Threshold = 0.50</span>
+                                                    <span style="font-size: 10px; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-scale-balanced" style="color: var(--secondary);"></i> Result: <b>Balanced Chunks</b></span>
+                                                </div>
+                                                <div class="threshold-demo-item">
+                                                    <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--success);">Threshold = 0.20</span>
+                                                    <span style="font-size: 10px; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-compress" style="color: var(--success);"></i> Result: <b>Very Large Chunks</b></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- RAG Benefit Visualization (FEATURE 8) -->
+                                        <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; border-left: 3px solid var(--success);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                                                <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--success); margin-right: 6px;"></i> How this Improves RAG Retrieval
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                                                Retrieval precision increases when search queries match standalone, cohesive chunks. 
+                                                By keeping related topics in single chunks, we avoid retrieving unrelated text.
+                                            </p>
+                                            <div class="rag-flow">
+                                                <div style="flex: 1; padding: 4px; background: var(--bg-card); border-radius: 4px; border: 0.5px solid var(--border);"><b>User Question</b><br/>"What is leave?"</div>
+                                                <div style="color: var(--primary);"><i class="fa-solid fa-chevron-right"></i></div>
+                                                <div style="flex: 1; padding: 4px; background: var(--bg-card); border-radius: 4px; border: 0.5px solid var(--border);"><b>Retriever Search</b><br/>Similarity Check</div>
+                                                <div style="color: var(--secondary);"><i class="fa-solid fa-chevron-right"></i></div>
+                                                <div style="flex: 1; padding: 4px; background: var(--bg-card); border-radius: 4px; border: 0.5px solid var(--border);"><b>Semantic Chunk Found</b><br/>Cohesive topic</div>
+                                                <div style="color: var(--success);"><i class="fa-solid fa-chevron-right"></i></div>
+                                                <div style="flex: 1; padding: 4px; background: var(--success-glow); color: var(--success); border-radius: 4px; border: 0.5px solid var(--success);"><b>Relevant Context</b><br/>High Precision</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Semantic Insights Panel -->
+                            <div id="sem-insights-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 20px; text-align: left; width: 100%; display: flex; flex-direction: column; gap: 16px;">
+                                    <div class="panel-header-title" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 4px;">
+                                        <i class="fa-solid fa-lightbulb" style="color: var(--primary); margin-right: 6px;"></i> Semantic Educational Insights
+                                    </div>
+                                    
+                                    <!-- Educational Insight Panel (FEATURE 10) -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+                                        <div class="card" style="padding: 16px; border-top: 3px solid var(--success);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--success); margin-bottom: 10px;">
+                                                <i class="fa-solid fa-circle-check"></i> Best Suitable For
+                                            </h4>
+                                            <ul style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
+                                                <li><b>✓ RAG Systems:</b> Keeps full answers together for better model responses.</li>
+                                                <li><b>✓ Knowledge Bases:</b> Organizes company documents logically.</li>
+                                                <li><b>✓ Research Documents:</b> Segments long, complex texts by topic.</li>
+                                                <li><b>✓ Technical Documentation:</b> Groups user guides or code guides cleanly.</li>
+                                                <li><b>✓ Enterprise Search:</b> Ensures search queries retrieve high-precision contexts.</li>
+                                            </ul>
+                                            <p style="font-size: 10px; color: var(--text-muted); margin-top: 12px; font-style: italic; line-height: 1.4;">
+                                                Reason: Semantic chunking matches how humans search—by topic, not by word counts.
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="card" style="padding: 16px; border-top: 3px solid var(--danger);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--danger); margin-bottom: 10px;">
+                                                <i class="fa-solid fa-circle-xmark"></i> Less Suitable For
+                                            </h4>
+                                            <ul style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
+                                                <li><b>✗ Very Small Documents:</b> If a document is under a few sentences, semantic clustering is redundant and slow.</li>
+                                                <li><b>✗ Real-Time Low-Latency Systems:</b> Encoding embeddings on-the-fly adds significant response delay.</li>
+                                                <li><b>✗ Resource-Constrained Environments:</b> Running deep learning transformers consumes massive RAM/GPU.</li>
+                                            </ul>
+                                            <p style="font-size: 10px; color: var(--text-muted); margin-top: 12px; font-style: italic; line-height: 1.4;">
+                                                Reason: Simple splitters (like recursive or fixed) are instant and use zero extra server resources.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Document Mapping Flow Panel -->
+                            <div id="doc-mapping-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 16px; text-align: left; width: 100%;">
+                                    <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-bottom: 12px;">
+                                        <i class="fa-solid fa-diagram-project" style="color: var(--secondary); margin-right: 6px;"></i> Section-to-Chunk Mapping Flow
+                                    </div>
+                                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">This diagram shows how individual logical headings in your document are mapped directly into independent retrieval chunks.</p>
+                                    <div id="doc-mapping-flow-container" class="doc-mapping-flow-container" style="display: flex; flex-direction: column; gap: 12px;">
+                                        <!-- Dynamic mapping flow nodes will render here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Query Simulation Panel -->
+                            <div id="query-simulation-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 20px; text-align: left; width: 100%;">
+                                    <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-bottom: 12px;">
+                                        <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--secondary); margin-right: 6px;"></i> Query Retrieval Simulator
+                                    </div>
+                                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">This simulator runs a real-time vector search on the generated query-aware chunks. Enter any question to find matches, compute similarity scores, and review rankings.</p>
+                                    
+                                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                                        <div class="simulation-input-group" style="display: flex; gap: 12px; align-items: center;">
+                                            <input type="text" id="query-sim-search" class="premium-textarea" placeholder="Enter a search question (e.g. 'What is the PTO policy?')..." style="flex: 1; height: 38px; min-height: 38px; padding: 8px 14px;" />
+                                            <button class="btn btn-primary" id="btn-run-query-sim" style="height: 38px; padding: 0 20px;">
+                                                <i class="fa-solid fa-search"></i> Run Simulation
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="query-simulation-results-layout">
+                                            <!-- Left side: retrieved ranked chunks -->
+                                            <div class="card" style="padding: 16px; max-height: 450px; overflow-y: auto;">
+                                                <h3 style="font-size: 12px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">Retrieved Chunks & Relevance Rank</h3>
+                                                <div id="query-sim-results-container" class="chunks-container list-layout">
+                                                    <div class="empty-output-state" style="padding: 20px;">
+                                                        <i class="fa-solid fa-magnifying-glass empty-icon"></i>
+                                                        <h4 style="font-size: 12px;">No Query Simulated Yet</h4>
+                                                        <p style="font-size: 10px;">Enter a question above and click Run Simulation to test retrieval ranking.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Right side: live similarity score explanation and comparison charts/badges -->
+                                            <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+                                                <h3 style="font-size: 12px; font-weight: 700; color: var(--text-primary);">Similarity Score Metrics (FEATURE 3)</h3>
+                                                <div id="query-sim-metrics-container" style="display: flex; flex-direction: column; gap: 12px;">
+                                                    <div class="stat-box" style="padding: 12px; border-left: 3px solid var(--success);">
+                                                        <span class="stat-label">Live Query Example</span>
+                                                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+                                                            <div><b>Query:</b> "What is the PTO policy?"</div>
+                                                            <div style="display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: 10px; margin-top: 4px;">
+                                                                <div style="display: flex; justify-content: space-between; padding: 4px 8px; background: rgba(16, 185, 129, 0.08); border-radius: 4px; border-left: 3px solid var(--success);">
+                                                                    <span>PTO Policy Section</span>
+                                                                    <span style="color: var(--success); font-weight: 700;">Score: 0.92</span>
+                                                                </div>
+                                                                <div style="display: flex; justify-content: space-between; padding: 4px 8px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; border-left: 3px solid var(--border);">
+                                                                    <span>Sick Leave Section</span>
+                                                                    <span style="color: var(--text-muted);">Score: 0.43</span>
+                                                                </div>
+                                                                <div style="display: flex; justify-content: space-between; padding: 4px 8px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; border-left: 3px solid var(--border);">
+                                                                    <span>Parental Leave Section</span>
+                                                                    <span style="color: var(--text-muted);">Score: 0.31</span>
+                                                                </div>
+                                                            </div>
+                                                            <p style="margin-top: 8px; line-height: 1.4; font-size: 10.5px;">
+                                                                <b>Why is PTO policy the highest?</b> The search query targets paid time off. 
+                                                                Because the word vectors for "PTO" and "Paid Time Off" share a close mathematical direction, the cosine similarity calculation produces a high score (0.92), placing it at the top of the retrieval context.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Query-Aware Concept Lab Panel -->
+                            <div id="query-concept-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 20px; text-align: left; width: 100%; display: flex; flex-direction: column; gap: 20px;">
+                                    <div class="panel-header-title" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 4px;">
+                                        <i class="fa-solid fa-graduation-cap" style="color: var(--primary); margin-right: 6px;"></i> Query-Aware Chunking Concept Lab
+                                    </div>
+                                    
+                                    <div class="semantic-concept-grid">
+                                        <!-- Why Query-Aware Is Different (FEATURE 1) -->
+                                        <div class="card" style="padding: 16px; border-left: 3px solid var(--primary); display: flex; flex-direction: column; gap: 10px;">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary);">
+                                                <i class="fa-solid fa-arrows-split-up-and-left" style="color: var(--primary); margin-right: 6px;"></i> Why Query-Aware Is Different
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+                                                While both strategies use semantic embeddings, their split boundaries serve completely different purposes:
+                                            </p>
+                                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px; color: var(--text-muted);">
+                                                <div style="padding: 8px; background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: 4px;">
+                                                    <b style="color: var(--secondary);">Semantic Chunking:</b> Creates topic-based chunks statically, completely <i>independent</i> of any user query. It looks only at topic shifts in the document.
+                                                </div>
+                                                <div style="padding: 8px; background: rgba(255,255,255,0.01); border: 1px dashed var(--border); border-radius: 4px;">
+                                                    <b style="color: var(--primary);">Query-Aware Chunking:</b> Creates or prioritizes chunks dynamically based directly on the <i>user's search intent</i>, aligning chunk boundaries to capture relevant answers.
+                                                </div>
+                                            </div>
+                                            <div style="margin-top: 6px; padding: 10px; background: var(--bg-card); border-radius: var(--radius-sm); border: 0.5px solid var(--border); font-size: 10.5px;">
+                                                <b>Example Case:</b>
+                                                <div style="margin-top: 4px; font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted);">
+                                                    • Document: "Apples are red. The leave policy allows 20 days off. Python is fast."<br/>
+                                                    • Query: "How many vacation days do I get?"<br/>
+                                                    • Query-Aware Split: Extracts <i>"The leave policy allows 20 days off"</i> as the target chunk, ignoring fruit and coding sentences.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Visual Flow Diagram (FEATURE 2) -->
+                                        <div class="card" style="padding: 16px; border-left: 3px solid var(--secondary); display: flex; flex-direction: column; gap: 8px;">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--text-primary);">
+                                                <i class="fa-solid fa-route" style="color: var(--secondary); margin-right: 6px;"></i> Query-Aware Retrieval Flow
+                                            </h4>
+                                            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px;">
+                                                This diagram outlines how queries guide chunk extraction and boundary refinement:
+                                            </p>
+                                            <div class="concept-flow">
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--primary-glow); color: var(--primary);">1</span> <b>User Query:</b> Intent check</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--secondary-glow); color: var(--secondary);">2</span> <b>Query Embedding:</b> Convert to vector</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--primary-glow); color: var(--primary);">3</span> <b>Similarity Scoring:</b> Compare vectors</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--secondary-glow); color: var(--secondary);">4</span> <b>Relevant Region Detection:</b> Focus target</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--primary-glow); color: var(--primary);">5</span> <b>Chunk Boundary Creation:</b> Split text</div>
+                                                <div class="concept-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                                                <div class="concept-step"><span class="step-badge" style="background: var(--success-glow); color: var(--success);">6</span> <b>RAG Retrieval:</b> Inject into LLM</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="semantic-concept-grid">
+                                        <!-- Best Practices (FEATURE 4) -->
+                                        <div class="card" style="padding: 16px; border-top: 3px solid var(--success);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--success); margin-bottom: 8px;">
+                                                <i class="fa-solid fa-circle-check"></i> Best Practices
+                                            </h4>
+                                            <ul style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
+                                                <li><b>✓ Collect User Questions:</b> Gather common inquiries before designing query-aware boundaries to ensure your test query vectors align with real search patterns.</li>
+                                                <li><b>✓ Measure Retrieval Precision:</b> Evaluate performance based on retrieval accuracy and context quality rather than simple chunk counts.</li>
+                                                <li><b>✓ Cache Query Embeddings:</b> Store calculated vector embeddings for frequently searched questions to save on compute resources.</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <!-- Common Mistakes (FEATURE 5) -->
+                                        <div class="card" style="padding: 16px; border-top: 3px solid var(--danger);">
+                                            <h4 style="font-size: 13px; font-weight: 700; color: var(--danger); margin-bottom: 8px;">
+                                                <i class="fa-solid fa-circle-xmark"></i> Common Mistakes
+                                            </h4>
+                                            <ul style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
+                                                <li><b>✗ Single Intent Assumption:</b> Assuming that a single query vector is sufficient to represent all diverse user search intents.</li>
+                                                <li><b>✗ Ignoring Synonyms:</b> Neglecting synonymous phrases or colloquial search inputs, causing vector distance mismatches.</li>
+                                                <li><b>✗ Overfitting Boundaries:</b> Slicing document structures around a small, static query dataset, leading to poor generalization for new questions.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Document Mapping Flow Panel -->
+                            <div id="doc-mapping-panel" class="meta-sub-panel" style="display: none; width: 100%;">
+                                <div class="card" style="padding: 16px; text-align: left; width: 100%;">
+                                    <div class="panel-header-title" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-bottom: 12px;">
+                                        <i class="fa-solid fa-diagram-project" style="color: var(--secondary); margin-right: 6px;"></i> Section-to-Chunk Mapping Flow
+                                    </div>
+                                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">This diagram shows how individual logical headings in your document are mapped directly into independent retrieval chunks.</p>
+                                    <div id="doc-mapping-flow-container" class="doc-mapping-flow-container" style="display: flex; flex-direction: column; gap: 12px;">
+                                        <!-- Dynamic mapping flow nodes will render here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 12: Comparison Dashboard Container -->
+                        <div id="comparison-dashboard-container" style="display: none; flex-direction: column; gap: 16px; width: 100%; height: 100%; overflow-y: auto;">
+                            <!-- Run Comparison Action Banner -->
+                            <div class="comparison-banner-box" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: rgba(139, 92, 246, 0.04); border: 1px dashed var(--primary); border-radius: var(--radius-md); margin-bottom: 10px; gap: 16px;">
+                                <div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">
+                                    <h3 style="font-size: 14px; font-weight: 800; color: var(--text-primary); margin: 0;"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary); margin-right: 6px;"></i> Compare All Chunking Strategies</h3>
+                                    <p style="font-size: 11px; color: var(--text-muted); max-width: 600px; margin: 0;">Run all 7 distinct chunking splits simultaneously on this document. We evaluate speed, chunk sizes, semantic cohesion (cosine similarity of adjacent sentences), and RAG retrieval capability.</p>
+                                </div>
+                                <button class="btn btn-primary btn-glow" id="btn-run-comparison" style="padding: 10px 18px; font-size: 12px; white-space: nowrap;">
+                                    <i class="fa-solid fa-play"></i> Run Strategy Comparison
+                                </button>
+                            </div>
+
+                            <!-- Charts Grid -->
+                            <div class="dashboard-charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
+                                <div class="card" style="padding: 16px; background: rgba(0, 0, 0, 0.15); border: 1px solid var(--border);">
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;"><i class="fa-solid fa-chart-simple" style="color: var(--primary); margin-right: 6px;"></i> Chunk Count & Latency</div>
+                                    <div style="position: relative; height: 260px; width: 100%;">
+                                        <canvas id="chart-bar-metrics"></canvas>
+                                    </div>
+                                </div>
+                                <div class="card" style="padding: 16px; background: rgba(0, 0, 0, 0.15); border: 1px solid var(--border);">
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;"><i class="fa-solid fa-circle-nodes" style="color: var(--secondary); margin-right: 6px;"></i> Strategy Multi-Dimensional Quality (0-100)</div>
+                                    <div style="position: relative; height: 260px; width: 100%;">
+                                        <canvas id="chart-radar-quality"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Comparison Table -->
+                            <div class="card" style="padding: 16px; background: rgba(0, 0, 0, 0.15); border: 1px solid var(--border); margin-top: 10px; margin-bottom: 20px;">
+                                <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;"><i class="fa-solid fa-table" style="color: var(--accent-orange); margin-right: 6px;"></i> Strategic Comparison Grid</div>
+                                <div style="overflow-x: auto; width: 100%;">
+                                    <table class="comparison-table" id="dashboard-compare-table" style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th>Strategy</th>
+                                                <th>Chunks</th>
+                                                <th>Avg Size (Chars)</th>
+                                                <th>Semantic Coherence</th>
+                                                <th>Retrieval Relevance</th>
+                                                <th>Latency (ms)</th>
+                                                <th>Evaluation Grade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="7" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 20px;">No comparison data calculated yet. Click "Run Strategy Comparison" to begin.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 13: Global RAG Retrieval Simulator Container -->
+                        <div id="global-simulator-container" style="display: none; flex-direction: column; gap: 16px; width: 100%; height: 100%; overflow-y: auto;">
+                            <!-- Search query bar -->
+                            <div class="simulator-search-bar" style="display: flex; gap: 10px; margin-bottom: 10px; text-align: left;">
+                                <input type="text" id="global-sim-query-input" class="premium-input-sm" style="height: 38px; flex: 1;" placeholder="Ask RAG a question (e.g. 'What is the parental leave duration?')" />
+                                <button class="btn btn-primary btn-sm" id="btn-global-sim-retrieve" style="height: 38px; padding: 0 16px; white-space: nowrap;"><i class="fa-solid fa-magnifying-glass"></i> Retrieve Chunks</button>
+                            </div>
+
+                            <!-- Metrics scorecards row -->
+                            <div class="simulator-metrics-bar" style="display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap;">
+                                <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative;">
+                                    <span class="stat-label">Mean Cosine Sim</span>
+                                    <span class="stat-value" id="global-sim-mean-similarity" style="color: var(--primary); font-size: 15px; font-weight: 800;">---</span>
+                                </div>
+                                <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative;">
+                                    <span class="stat-label">Retrieval Precision</span>
+                                    <span class="stat-value" id="global-sim-precision" style="color: var(--secondary); font-size: 15px; font-weight: 800;">---</span>
+                                </div>
+                                <div class="stat-box" style="flex: 1; min-width: 150px; padding: 10px 14px; position: relative;">
+                                    <span class="stat-label">Retrieval Recall</span>
+                                    <span class="stat-value" id="global-sim-recall" style="color: var(--accent-orange); font-size: 15px; font-weight: 800;">---</span>
+                                </div>
+                            </div>
+
+                            <!-- Results container -->
+                            <div id="global-sim-results-container" class="chunks-container list-layout" style="margin-bottom: 20px;">
+                                <div class="empty-output-state">
+                                    <i class="fa-solid fa-magnifying-glass-chart empty-icon animate-pulse"></i>
+                                    <h3>No Simulation Query Sent Yet</h3>
+                                    <p>Type a question above and click Retrieve to simulate vector search semantic retrieval on the active strategy's chunks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MongoDB Ingestion Modal -->
+    <div id="mongo-modal" class="mongo-modal-backdrop" style="display: none;">
+        <div class="mongo-modal-content">
+            <div class="mongo-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="mongo-icon-circle"><i class="fa-solid fa-database"></i></div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-primary);">MongoDB Ingestion</h3>
+                        <p style="margin: 0; font-size: 11px; color: var(--text-muted);">Partitioned Document & Chunk Storage</p>
+                    </div>
+                </div>
+                <button class="btn-icon-close" id="btn-close-mongo-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="mongo-modal-body" id="mongo-modal-body">
+                <!-- Ingestion Result Content will be dynamically inserted here -->
+            </div>
+            <div class="mongo-modal-footer">
+                <button class="btn btn-secondary btn-sm" id="btn-dismiss-mongo-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Logic Script -->
+    <script src="app.js?v=19" type="module"></script>
+</body>
+</html>
